@@ -1,0 +1,41 @@
+:root{
+  --bg:#0b0d12;
+  --card:#131722;
+  --ink:#e7ecf5;
+  --muted:#9aa5b1;
+  --accent:#ff4060;
+  --brand:#9b5cff;
+  --line:rgba(255,255,255,.08);
+}
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+
+.mx-container{max-width:1080px;margin:0 auto;padding:0 20px}
+.mx-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+
+/* Topbar */
+.mx-topbar{position:sticky;top:0;background:rgba(11,13,18,.7);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:40}
+.mx-brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px}
+.mx-dot{width:10px;height:10px;border-radius:50%;background:var(--brand);display:inline-block}
+.mx-nav a{color:var(--muted);text-decoration:none;margin-left:18px}
+.mx-nav a:hover{color:var(--ink)}
+
+/* Hero */
+.mx-hero{padding:88px 0 48px;border-bottom:1px solid var(--line);
+  background: radial-gradient(800px 400px at 50% -30%, rgba(155,92,255,.25), transparent 60%)}
+.mx-hero h1{font-size:44px;line-height:1.1;margin:0 0 10px}
+.mx-accent{color:var(--accent)}
+.mx-sub{color:var(--muted);max-width:720px;margin:0 auto 22px}
+.mx-cta{display:flex;gap:12px;justify-content:center;margin:16px 0 8px}
+.mx-badges{color:var(--muted);font-size:14px;text-align:center}
+
+/* Buttons */
+.mx-btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:10px;
+  text-decoration:none;font-weight:600;border:1px solid var(--line)}
+.mx-primary{background:linear-gradient(135deg,var(--brand),#6a9bff);color:#fff;border-color:transparent}
+.mx-primary:hover{filter:brightness(1.05)}
+.mx-secondary{background:transparent;color:var(--ink)}
+.mx-secondary:hover{background:rgba(255,255,255,.05)}
+
+/
