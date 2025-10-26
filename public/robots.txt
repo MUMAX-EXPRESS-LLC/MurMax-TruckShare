@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://appmurmaxexpress.com/sitemap.xml
