@@ -13,12 +13,10 @@ import MyLoads from "./pages/MyLoads";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
-/* ✅ Navigation components */
+/* ✅ New/combined imports */
+import Toaster from "./components/Toaster";
 import BottomBar from "./components/BottomBar";
 import FabPost from "./components/FabPost";
-
-/* ✅ Toast host (rendered before BottomBar/FAB) */
-import Toaster from "./components/Toaster";
 
 import "./App.css";
 
@@ -143,7 +141,7 @@ export default function App() {
         © {new Date().getFullYear()} MurMax Express® — Command Through Cognition™
       </div>
 
-      {/* ✅ Toast host (rendered before bars for proper z-index layering) */}
+      {/* ✅ Mount Toaster BEFORE BottomBar/FAB */}
       <Toaster />
 
       {/* --- Mobile Bottom Action Bar --- */}
