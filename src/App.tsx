@@ -1,3 +1,5 @@
+import Toaster from "./components/Toaster";
+
 import { useEffect, useState } from "react";
 import { NavLink, Route, Routes, Link } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
