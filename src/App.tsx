@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { NavLink, Route, Routes, Link } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
 import { supabase } from "./lib/supabase";
@@ -15,16 +16,35 @@ import "./App.css";
 
 export default function App() {
   const { user, ready } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Close menu on route change (when user taps a link)
+  useEffect(() => {
+    const close = () => setMenuOpen(false);
+    window.addEventListener("hashchange", close);
+    window.addEventListener("popstate", close);
+    return () => {
+      window.removeEventListener("hashchange", close);
+      window.removeEventListener("popstate", close);
+    };
+  }, []);
+
+  // Prevent background scroll when menu is open on small screens
+  useEffect(() => {
+    if (menuOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+  }, [menuOpen]);
 
   return (
     <div className="app">
-      <nav className="topnav">
+      <nav className="topnav" role="navigation" aria-label="Primary">
         <div className="brand">
           <span>MurMax Express®</span>
           <span className="badge">Truckshare</span>
         </div>
 
-        <div className="tabs">
+        {/* Desktop tabs */}
+        <div className="tabs tabs-desktop">
           <NavLink to="/" end>Home</NavLink>
           <NavLink to="/loads">Loads</NavLink>
           <NavLink to="/my-loads">My Loads</NavLink>
@@ -34,20 +54,68 @@ export default function App() {
           <NavLink to="/no-strings">No-Strings™ Instant</NavLink>
         </div>
 
-        {/* Auth status */}
-        <div style={{ marginLeft: "auto", display: "flex", gap: 10, alignItems: "center" }}>
+        {/* Auth cluster (shared) */}
+        <div className="auth-cluster">
           {ready && (user ? (
             <>
-              <span className="tag">{user.email ?? "Signed in"}</span>
+              <span className="tag auth-email">{user.email ?? "Signed in"}</span>
               <button className="ghost" onClick={() => supabase.auth.signOut()}>Logout</button>
             </>
           ) : (
             <Link to="/login" className="tag">Login</Link>
           ))}
         </div>
+
+        {/* Hamburger for mobile */}
+        <button
+          className="hamburger"
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
+          onClick={() => setMenuOpen(v => !v)}
+        >
+          <span className="hamburger-bar" />
+          <span className="hamburger-bar" />
+          <span className="hamburger-bar" />
+        </button>
       </nav>
 
-      <main className="content">
+      {/* Mobile slide-down menu */}
+      <div
+        id="mobile-menu"
+        className={`mobile-menu ${menuOpen ? "open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="mobile-menu-inner">
+          <div className="tabs tabs-mobile" onClick={() => setMenuOpen(false)}>
+            <NavLink to="/" end>Home</NavLink>
+            <NavLink to="/loads">Loads</NavLink>
+            <NavLink to="/my-loads">My Loads</NavLink>
+            <NavLink to="/drivers">Drivers</NavLink>
+            <NavLink to="/dispatchers">Dispatchers</NavLink>
+            <NavLink to="/leasing">Leasing</NavLink>
+            <NavLink to="/no-strings">No-Strings™ Instant</NavLink>
+          </div>
+
+          <div className="auth-mobile">
+            {ready && (user ? (
+              <>
+                <span className="tag auth-email">{user.email ?? "Signed in"}</span>
+                <button className="ghost" onClick={() => { setMenuOpen(false); supabase.auth.signOut(); }}>
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link to="/login" className="tag" onClick={() => setMenuOpen(false)}>
+                Login
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <main className="content" onClick={() => menuOpen && setMenuOpen(false)}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/loads" element={<Loads />} />
