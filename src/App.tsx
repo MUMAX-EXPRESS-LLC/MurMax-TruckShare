@@ -1,14 +1,14 @@
 import { NavLink, Route, Routes, Link } from "react-router-dom";
-import { useAuth } from "./hooks/useAuth";              // <- add
-import { supabase } from "./lib/supabase";              // <- add
+import { useAuth } from "./hooks/useAuth";
+import { supabase } from "./lib/supabase";
 
-// ... your imports
 import Home from "./pages/Home";
 import Drivers from "./pages/Drivers";
 import Dispatchers from "./pages/Dispatchers";
 import Leasing from "./pages/Leasing";
 import NoStrings from "./pages/NoStrings";
 import Loads from "./pages/Loads";
+import MyLoads from "./pages/MyLoads";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import "./App.css";
@@ -23,16 +23,18 @@ export default function App() {
           <span>MurMax Express®</span>
           <span className="badge">Truckshare</span>
         </div>
+
         <div className="tabs">
           <NavLink to="/" end>Home</NavLink>
           <NavLink to="/loads">Loads</NavLink>
+          <NavLink to="/my-loads">My Loads</NavLink>
           <NavLink to="/drivers">Drivers</NavLink>
           <NavLink to="/dispatchers">Dispatchers</NavLink>
           <NavLink to="/leasing">Leasing</NavLink>
           <NavLink to="/no-strings">No-Strings™ Instant</NavLink>
         </div>
 
-        {/* Auth status on the right */}
+        {/* Auth status */}
         <div style={{ marginLeft: "auto", display: "flex", gap: 10, alignItems: "center" }}>
           {ready && (user ? (
             <>
@@ -49,6 +51,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/loads" element={<Loads />} />
+          <Route path="/my-loads" element={<MyLoads />} />
           <Route path="/drivers" element={<Drivers />} />
           <Route path="/dispatchers" element={<Dispatchers />} />
           <Route path="/leasing" element={<Leasing />} />
