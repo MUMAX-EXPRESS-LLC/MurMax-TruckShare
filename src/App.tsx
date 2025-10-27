@@ -13,8 +13,9 @@ import MyLoads from "./pages/MyLoads";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
-/* ✅ new import for the sticky bottom action bar */
+/* ✅ Imports for mobile and desktop navigation */
 import BottomBar from "./components/BottomBar";
+import FabPost from "./components/FabPost";
 
 import "./App.css";
 
@@ -22,7 +23,7 @@ export default function App() {
   const { user, ready } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // close mobile menu on route change
+  // Close mobile menu on route change
   useEffect(() => {
     const close = () => setMenuOpen(false);
     window.addEventListener("hashchange", close);
@@ -33,7 +34,7 @@ export default function App() {
     };
   }, []);
 
-  // lock body scroll when menu open
+  // Prevent scrolling when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
   }, [menuOpen]);
@@ -47,7 +48,7 @@ export default function App() {
           <span className="badge">Truckshare</span>
         </div>
 
-        {/* desktop tabs */}
+        {/* Desktop tabs */}
         <div className="tabs tabs-desktop">
           <NavLink to="/" end>Home</NavLink>
           <NavLink to="/loads">Loads</NavLink>
@@ -58,7 +59,7 @@ export default function App() {
           <NavLink to="/no-strings">No-Strings™ Instant</NavLink>
         </div>
 
-        {/* auth area (desktop) */}
+        {/* Auth area (desktop) */}
         <div className="auth-cluster">
           {ready && (user ? (
             <>
@@ -70,7 +71,7 @@ export default function App() {
           ))}
         </div>
 
-        {/* mobile hamburger */}
+        {/* Hamburger for mobile */}
         <button
           className="hamburger"
           aria-label="Toggle menu"
@@ -139,8 +140,11 @@ export default function App() {
         © {new Date().getFullYear()} MurMax Express® — Command Through Cognition™
       </div>
 
-      {/* --- Sticky Bottom Action Bar (mobile) --- */}
+      {/* --- Mobile Bottom Action Bar --- */}
       <BottomBar />
+
+      {/* --- Desktop Floating “+ Post Load” FAB --- */}
+      <FabPost />
     </div>
   );
 }
