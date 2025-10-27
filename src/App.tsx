@@ -1,109 +1,66 @@
-import "./app.css";
+import { NavLink, Route, Routes, Link } from "react-router-dom";
+import { useAuth } from "./hooks/useAuth";              // <- add
+import { supabase } from "./lib/supabase";              // <- add
+
+// ... your imports
+import Home from "./pages/Home";
+import Drivers from "./pages/Drivers";
+import Dispatchers from "./pages/Dispatchers";
+import Leasing from "./pages/Leasing";
+import NoStrings from "./pages/NoStrings";
+import Loads from "./pages/Loads";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
+import "./App.css";
 
 export default function App() {
+  const { user, ready } = useAuth();
+
   return (
-    <div className="mx-app">
-      {/* Top Bar */}
-      <header className="mx-topbar">
-        <div className="mx-container mx-row">
-          <div className="mx-brand">
-            <span className="mx-dot" /> MurMax <strong>TruckShare</strong>
-          </div>
-          <nav className="mx-nav">
-            <a href="#features">Features</a>
-            <a href="#how">How it works</a>
-            <a href="#contact">Contact</a>
-          </nav>
+    <div className="app">
+      <nav className="topnav">
+        <div className="brand">
+          <span>MurMax Express®</span>
+          <span className="badge">Truckshare</span>
         </div>
-      </header>
+        <div className="tabs">
+          <NavLink to="/" end>Home</NavLink>
+          <NavLink to="/loads">Loads</NavLink>
+          <NavLink to="/drivers">Drivers</NavLink>
+          <NavLink to="/dispatchers">Dispatchers</NavLink>
+          <NavLink to="/leasing">Leasing</NavLink>
+          <NavLink to="/no-strings">No-Strings™ Instant</NavLink>
+        </div>
 
-      {/* Hero */}
-      <section className="mx-hero">
-        <div className="mx-container">
-          <h1>
-            The ride-share network for <span className="mx-accent">freight</span>
-          </h1>
-          <p className="mx-sub">
-            Connect <b>Shippers</b>, <b>Drivers</b>, and <b>Dispatch</b> in seconds.
-            Instant booking. Transparent pricing. <b>No-Strings™</b>.
-          </p>
-          <div className="mx-cta">
-            <a className="mx-btn mx-primary" href="#get-started">Get Started</a>
-            <a className="mx-btn mx-secondary" href="#demo">View Demo</a>
-          </div>
-          <div className="mx-badges">
-            <span>Live on Vercel</span> • <span>Vite + React</span> • <span>TypeScript</span>
-          </div>
+        {/* Auth status on the right */}
+        <div style={{ marginLeft: "auto", display: "flex", gap: 10, alignItems: "center" }}>
+          {ready && (user ? (
+            <>
+              <span className="tag">{user.email ?? "Signed in"}</span>
+              <button className="ghost" onClick={() => supabase.auth.signOut()}>Logout</button>
+            </>
+          ) : (
+            <Link to="/login" className="tag">Login</Link>
+          ))}
         </div>
-      </section>
+      </nav>
 
-      {/* Features */}
-      <section id="features" className="mx-section">
-        <div className="mx-container">
-          <h2>Why MurMax TruckShare</h2>
-          <div className="mx-grid">
-            <div className="mx-card">
-              <h3>Instant Loads</h3>
-              <p>Post and accept loads in real time with automated notifications.</p>
-            </div>
-            <div className="mx-card">
-              <h3>Smart Matching</h3>
-              <p>Optimized suggestions by lane, equipment, RPM targets, and compliance.</p>
-            </div>
-            <div className="mx-card">
-              <h3>No-Strings™</h3>
-              <p>Clear payouts, transparent fees, and built-in performance tracking.</p>
-            </div>
-            <div className="mx-card">
-              <h3>MurMax Ops</h3>
-              <p>Dispatcher tools, driver onboarding, and one-click paperwork bundles.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <main className="content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/loads" element={<Loads />} />
+          <Route path="/drivers" element={<Drivers />} />
+          <Route path="/dispatchers" element={<Dispatchers />} />
+          <Route path="/leasing" element={<Leasing />} />
+          <Route path="/no-strings" element={<NoStrings />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
 
-      {/* How it works */}
-      <section id="how" className="mx-section">
-        <div className="mx-container mx-how">
-          <div className="mx-step">
-            <span className="mx-step-num">1</span>
-            <h4>Create your profile</h4>
-            <p>Choose Driver, Shipper, or Dispatcher and verify in minutes.</p>
-          </div>
-          <div className="mx-step">
-            <span className="mx-step-num">2</span>
-            <h4>Set your rules</h4>
-            <p>Pick lanes, equipment, RPM floor, and No-Strings™ preferences.</p>
-          </div>
-          <div className="mx-step">
-            <span className="mx-step-num">3</span>
-            <h4>Book & roll</h4>
-            <p>Match instantly, e-sign, and track KPIs from pickup to POD.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section id="get-started" className="mx-cta-band">
-        <div className="mx-container mx-row">
-          <div>
-            <h2>Ready to move freight the MurMax way?</h2>
-            <p>Launch your profile and get your first load today.</p>
-          </div>
-          <a className="mx-btn mx-primary" href="#contact">Join the Network</a>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="mx-footer" id="contact">
-        <div className="mx-container mx-row">
-          <p>© {new Date().getFullYear()} MurMax Express®. All rights reserved.</p>
-          <div className="mx-foot-links">
-            <a href="https://appmurmaxexpress.com/status.html">Status</a>
-            <a href="https://appmurmaxexpress.com/robots.txt">Robots</a>
-          </div>
-        </div>
-      </footer>
+      <div className="footer">
+        © {new Date().getFullYear()} MurMax Express® — Command Through Cognition™
+      </div>
     </div>
   );
 }
