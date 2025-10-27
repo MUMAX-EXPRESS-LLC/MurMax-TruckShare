@@ -1,0 +1,44 @@
+-- If table doesn't exist, create it (safe if it already exists — skip errors manually)
+create table if not exists public.loads (
+  id uuid primary key default gen_random_uuid(),
+  origin text,
+  destination text,
+  miles int,
+  rpm numeric(10,2),
+  budget numeric(10,2),
+  in_house_first boolean default true,
+  claimed_by_user uuid references auth.users(id),
+  created_by uuid references auth.users(id) default auth.uid(),
+  inserted_at timestamptz default now()
+);
+
+-- Ensure gen_random_uuid() works (pgcrypto is enabled by default on Supabase)
+-- If you used uuid_generate_v4() earlier, you can keep it — both work on Supabase.
+
+-- RLS
+alter table public.loads enable row level security;
+
+-- Anyone can read loads
+drop policy if exists "Public can read loads" on public.loads;
+create policy "Public can read loads"
+on public.loads for select
+using (true);
+
+-- Only authenticated users can insert, and they must be the creator
+drop policy if exists "Authenticated can insert loads" on public.loads;
+create policy "Authenticated can insert loads"
+on public.loads for insert to authenticated
+with check (auth.uid() = created_by);
+
+-- Authenticated users can claim an unclaimed load
+drop policy if exists "Claim unclaimed" on public.loads;
+create policy "Claim unclaimed"
+on public.loads for update to authenticated
+using (claimed_by_user is null)
+with check (claimed_by_user = auth.uid());
+
+-- (Optional) Creators can update their own loads (e.g., fix typos)
+drop policy if exists "Creators can update own loads" on public.loads;
+create policy "Creators can update own loads"
+on public.loads for update to authenticated
+using (created_by = auth.uid());
