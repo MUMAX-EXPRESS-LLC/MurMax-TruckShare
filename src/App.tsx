@@ -152,3 +152,34 @@ export default function App() {
     </div>
   );
 }
+/* --- View Files Modal --- */
+.mf-overlay{
+  position: fixed; inset: 0; z-index: 80;
+  background: rgba(0,0,0,.5);
+  display: grid; place-items: center; padding: 20px;
+}
+.mf-dialog{
+  width: min(920px, 100%); max-height: 85vh; overflow: auto;
+  background: #101116; border:1px solid #1f1f24; border-radius:16px; padding:16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+}
+.mf-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px }
+.mf-grid{ display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:12px }
+@media (max-width:900px){ .mf-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+@media (max-width:560px){ .mf-grid{ grid-template-columns: 1fr } }
+
+.mf-card{
+  border:1px solid #22232a; border-radius:12px; padding:10px;
+  background: linear-gradient(180deg,#12131a,#0e0f15);
+  display:grid; gap:8px;
+}
+.mf-thumb{
+  width:100%; aspect-ratio: 4/3; background:#0c0d12; border:1px solid #1d1e24; border-radius:10px;
+  display:grid; place-items:center; overflow:hidden;
+}
+.mf-thumb img{ width:100%; height:100%; object-fit:cover }
+.mf-icon{ font-size:28px; opacity:.9 }
+.mf-meta{ display:grid; gap:2px }
+.mf-name{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#f5f5f7 }
+.mf-sub{ font-size:12px; color:#cfcfd4; opacity:.8 }
+.mf-actions{ display:flex; gap:8px; justify-content:flex-end }
