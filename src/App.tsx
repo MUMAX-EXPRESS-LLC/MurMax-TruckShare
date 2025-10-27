@@ -1,5 +1,3 @@
-import Toaster from "./components/Toaster";
-
 import { useEffect, useState } from "react";
 import { NavLink, Route, Routes, Link } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
@@ -15,9 +13,12 @@ import MyLoads from "./pages/MyLoads";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
-/* ✅ Imports for mobile and desktop navigation */
+/* ✅ Navigation components */
 import BottomBar from "./components/BottomBar";
 import FabPost from "./components/FabPost";
+
+/* ✅ Toast host (rendered before BottomBar/FAB) */
+import Toaster from "./components/Toaster";
 
 import "./App.css";
 
@@ -141,6 +142,9 @@ export default function App() {
       <div className="footer">
         © {new Date().getFullYear()} MurMax Express® — Command Through Cognition™
       </div>
+
+      {/* ✅ Toast host (rendered before bars for proper z-index layering) */}
+      <Toaster />
 
       {/* --- Mobile Bottom Action Bar --- */}
       <BottomBar />
