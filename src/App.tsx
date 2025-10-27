@@ -12,13 +12,17 @@ import Loads from "./pages/Loads";
 import MyLoads from "./pages/MyLoads";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+
+/* ✅ new import for the sticky bottom action bar */
+import BottomBar from "./components/BottomBar";
+
 import "./App.css";
 
 export default function App() {
   const { user, ready } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Close menu on route change (when user taps a link)
+  // close mobile menu on route change
   useEffect(() => {
     const close = () => setMenuOpen(false);
     window.addEventListener("hashchange", close);
@@ -29,21 +33,21 @@ export default function App() {
     };
   }, []);
 
-  // Prevent background scroll when menu is open on small screens
+  // lock body scroll when menu open
   useEffect(() => {
-    if (menuOpen) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "";
+    document.body.style.overflow = menuOpen ? "hidden" : "";
   }, [menuOpen]);
 
   return (
     <div className="app">
+      {/* --- Top Navbar --- */}
       <nav className="topnav" role="navigation" aria-label="Primary">
         <div className="brand">
           <span>MurMax Express®</span>
           <span className="badge">Truckshare</span>
         </div>
 
-        {/* Desktop tabs */}
+        {/* desktop tabs */}
         <div className="tabs tabs-desktop">
           <NavLink to="/" end>Home</NavLink>
           <NavLink to="/loads">Loads</NavLink>
@@ -54,7 +58,7 @@ export default function App() {
           <NavLink to="/no-strings">No-Strings™ Instant</NavLink>
         </div>
 
-        {/* Auth cluster (shared) */}
+        {/* auth area (desktop) */}
         <div className="auth-cluster">
           {ready && (user ? (
             <>
@@ -66,7 +70,7 @@ export default function App() {
           ))}
         </div>
 
-        {/* Hamburger for mobile */}
+        {/* mobile hamburger */}
         <button
           className="hamburger"
           aria-label="Toggle menu"
@@ -80,7 +84,7 @@ export default function App() {
         </button>
       </nav>
 
-      {/* Mobile slide-down menu */}
+      {/* --- Mobile Slide-Down Menu --- */}
       <div
         id="mobile-menu"
         className={`mobile-menu ${menuOpen ? "open" : ""}`}
@@ -115,6 +119,7 @@ export default function App() {
         </div>
       </div>
 
+      {/* --- Main Content --- */}
       <main className="content" onClick={() => menuOpen && setMenuOpen(false)}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -129,9 +134,13 @@ export default function App() {
         </Routes>
       </main>
 
+      {/* --- Footer --- */}
       <div className="footer">
         © {new Date().getFullYear()} MurMax Express® — Command Through Cognition™
       </div>
+
+      {/* --- Sticky Bottom Action Bar (mobile) --- */}
+      <BottomBar />
     </div>
   );
 }
