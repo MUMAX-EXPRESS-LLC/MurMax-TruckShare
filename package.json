@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "format": "prettier --write .",
+    "verify": "node ./scripts/verify.mjs && npm run typecheck && npm run build",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.44.3",
@@ -19,8 +23,20 @@
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "sort-package-json": "^2.10.0",
     "typescript": "5.5.4",
     "vite": "5.4.10"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css,md,json}": [
+      "prettier --write"
+    ],
+    "package.json": [
+      "sort-package-json"
+    ]
   },
   "engines": {
     "node": ">=18.17"
