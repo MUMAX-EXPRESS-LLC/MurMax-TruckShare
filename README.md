@@ -1,3 +1,7 @@
+## Build & Uptime Status
+
+![MurMax Uptime](https://github.com/MUMAX-EXPRESS-LLC/MurMax-TruckShare/actions/workflows/uptime.yml/badge.svg)
+
 # 🚚 MurMax Express® — TruckShare Platform
 ### Built for Command Through Cognition™
 
