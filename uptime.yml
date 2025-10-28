@@ -1,0 +1,74 @@
+name: MurMax Uptime Monitor
+
+on:
+  schedule:
+    # Nightly at 02:00 UTC (adjust as needed)
+    - cron: "0 2 * * *"
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+
+jobs:
+  check-uptime:
+    name: Check primary, www redirect, and Vercel fallback
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        target:
+          # Expect 200 (OK) on the apex domain
+          - url: "https://appmurmaxexpress.com"
+            expect: "200"
+            label: "Primary apex"
+          # Expect 308 (permanent redirect) on www to apex
+          - url: "https://www.appmurmaxexpress.com"
+            expect: "308,301"
+            label: "WWW redirect"
+          # Expect 200 (OK) on Vercel fallback
+          - url: "https://murmaxtruckshare.vercel.app"
+            expect: "200"
+            label: "Vercel fallback"
+
+    steps:
+      - name: Show target
+        run: |
+          echo "Checking: ${{ matrix.target.label }} → ${{ matrix.target.url }}"
+          echo "Expected codes: ${{ matrix.target.expect }}"
+
+      - name: Curl request
+        id: curl
+        run: |
+          CODE=$(curl -sL -o /dev/null -w "%{http_code}" "${{ matrix.target.url }}")
+          echo "code=$CODE" >> "$GITHUB_OUTPUT"
+          echo "HTTP status: $CODE"
+
+      - name: Validate status code
+        run: |
+          CODE="${{ steps.curl.outputs.code }}"
+          EXPECT="${{ matrix.target.expect }}"
+          # normalize expectations into space-separated list
+          EXPECT_LIST=$(echo "$EXPECT" | tr ',' ' ')
+          MATCH=0
+          for E in $EXPECT_LIST; do
+            if [ "$CODE" = "$E" ]; then
+              MATCH=1
+              break
+            fi
+          done
+
+          if [ "$MATCH" -ne 1 ]; then
+            echo "::error::Unexpected status for ${{ matrix.target.url }}: got $CODE, expected one of: $EXPECT"
+            exit 1
+          else
+            echo "✅ ${{ matrix.target.label }} OK ($CODE)"
+          fi
+
+      - name: Optional content sanity (primary only)
+        if: matrix.target.url == 'https://appmurmaxexpress.com'
+        run: |
+          # Quickly ensure HTML renders something non-empty (not just status code)
+          BYTES=$(curl -sL "${{ matrix.target.url }}" | wc -c | tr -d ' ')
+          echo "Response bytes: $BYTES"
+          if [ "$BYTES" -lt 1000 ]; then
+            echo "::warning::Primary page response seems unusually small ($BYTES bytes). Verify content."
+          fi
