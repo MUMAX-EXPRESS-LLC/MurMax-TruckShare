@@ -1,4 +1,3 @@
-MurMax TruckShare — Live Deployment ✅
 # 🚚 MurMax Express® — TruckShare Platform
 ### Built for Command Through Cognition™
 
